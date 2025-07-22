@@ -1,0 +1,24 @@
+{
+    "name": "bohudur/laravel-sdk",
+    "description": "Automate Your Personal Payments with zero cost.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Bohudur\\LaravelSDK\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bohudur",
+            "email": "support@bohudur.one"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.18"
+    }
+}
