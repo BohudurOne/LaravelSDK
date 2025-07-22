@@ -13,8 +13,6 @@ This is Bohudur Laravel Module that helps to integrate Bohudur in your Laravel p
   - [Initializing the SDK](#initializing-the-sdk)
   - [Initializing a Payment](#initializing-a-payment-bangladeshi-methods)
   - [Verifying a Payment](#verifying-a-payment)
-  - [Handling IPN Notifications](#handling-ipn-notifications-optional)
-  - [Processing Refunds](#processing-refunds-optional)
 - [Routes](#routes)
 - [Notes](#notes)
 
@@ -78,38 +76,6 @@ try {
     dd("Initialization Error: " . $e->getMessage());
 }
 ```
-
----
-
-### Initializing a Payment (Global Methods)
-
-To initiate a payment:
-
-```php
-use UddoktaPay\LaravelSDK\Requests\CheckoutRequest;
-
-try {
-    $checkoutRequest = CheckoutRequest::make()
-        ->setFullName('John Doe')
-        ->setEmail('john@doe.com')
-        ->setAmount('10')
-        ->addMetadata('order_id', '12345')
-        ->setRedirectUrl(route('uddoktapay.verify'))
-        ->setCancelUrl(route('uddoktapay.cancel'))
-        ->setWebhookUrl(route('uddoktapay.ipn'));
-
-    $response = $uddoktapay->checkoutGlobal($checkoutRequest);
-
-    if ($response->failed()) {
-        dd($response->message());
-    }
-
-    return redirect($response->paymentURL());
-} catch (\UddoktaPay\LaravelSDK\Exceptions\UddoktaPayException $e) {
-    dd("Initialization Error: " . $e->getMessage());
-}
-```
-
 ---
 
 ### Verifying a Payment
@@ -130,57 +96,6 @@ try {
     }
 } catch (\UddoktaPay\LaravelSDK\Exceptions\UddoktaPayException $e) {
     dd("Verification Error: " . $e->getMessage());
-}
-```
-
----
-
-### Handling IPN Notifications (Optional)
-
-To handle Instant Payment Notifications (IPN):
-
-```php
-try {
-    $response = $uddoktapay->ipn($request);
-
-    if ($response->success()) {
-        // Handle successful IPN
-    } elseif ($response->pending()) {
-        // Handle pending IPN
-    } elseif ($response->failed()) {
-        // Handle failed IPN
-    }
-} catch (\UddoktaPay\LaravelSDK\Exceptions\UddoktaPayException $e) {
-    dd("IPN Error: " . $e->getMessage());
-}
-```
-
----
-
-### Processing Refunds (Optional)
-
-To process a refund:
-
-```php
-use UddoktaPay\LaravelSDK\Requests\RefundRequest;
-
-try {
-    $refundRequest = RefundRequest::make()
-        ->setAmount('10')
-        ->setTransactionId('12345')
-        ->setPaymentMethod('bkash')
-        ->setProductName('Sample Product')
-        ->setReason('Customer Request');
-
-    $response = $uddoktapay->refund($refundRequest);
-
-    if ($response->success()) {
-        // Handle refund success
-    } elseif ($response->failed()) {
-        // Handle refund failure
-    }
-} catch (\UddoktaPay\LaravelSDK\Exceptions\UddoktaPayException $e) {
-    dd("Refund Error: " . $e->getMessage());
 }
 ```
 
