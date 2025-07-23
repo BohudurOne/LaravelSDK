@@ -57,44 +57,90 @@ use Bohudur\LaravelSDK\Requests\CheckoutRequest;
 
 try {
     $checkoutRequest = CheckoutRequest::make()
-        ->setFullName('John Doe')
-        ->setEmail('john@doe.com')
-        ->setAmount('10')
-        ->addMetadata('order_id', '12345')
-        ->setRedirectUrl(route('uddoktapay.verify'))
-        ->setCancelUrl(route('uddoktapay.cancel'))
-        ->setWebhookUrl(route('uddoktapay.ipn'));
+        ->setFullName("John Doe")
+        ->setEmail("john@example.com")
+        ->setAmount(10)
+        ->setRedirectUrl(route('bohudur.execute'))
+        ->setCancelUrl(route('bohudur.cancel'))
+        ->setCurrency("BDT") //optional
+        ->setCurrencyValue(1) //optional
+        ->setMetadata([ /*optional */
+            'order_id' => 1234,
+            'user_id' => 5678,
+            'custom_note' => 'First-time purchase'
+        ])
+        ->setWebhookSuccessUrl("https://yourapp.com/webhook/success") //optional
+        ->setWebhookCancelUrl("https://yourapp.com/webhook/cancel"); //optional
 
-    $response = $uddoktapay->checkout($checkoutRequest);
+    $response = $bohudur->checkout($checkoutRequest);
 
     if ($response->failed()) {
         dd($response->message());
     }
-
-    return redirect($response->paymentURL());
-} catch (\UddoktaPay\LaravelSDK\Exceptions\UddoktaPayException $e) {
+    
+    return redirect()->away($response->paymentURL());
+} catch (\Bohudur\LaravelSDK\Exceptions\BohudurException $e) {
     dd("Initialization Error: " . $e->getMessage());
 }
 ```
 ---
 
-### Verifying a Payment
+### Execute a Payment
 
-After the payment is complete, verify it using the `VerifyResponse` class to understand the structure and available methods for processing the response:
+After the payment is complete, execute it using the `ExecuteResponse` class so that one payment key is used only one time. Also to understand the structure and available methods for processing the response:
 
 ```php
+use Bohudur\LaravelSDK\Bohudur;
+
 try {
-    $response = $uddoktapay->verify($request);
+    $bohudur = Bohudur::make(env('BOHUDUR_API_KEY'));
+  
+    $response = $bohudur->execute('paymentkey');
 
     if ($response->success()) {
         // Handle successful status
-        dd($response->toArray()); // Handle success
+        return response()->json([
+            'status' => 'success',
+            'transaction_id' => $response->transactionId(),
+            'amount' => $response->amount(),
+        ]);
     } elseif ($response->pending()) {
         // Handle pending status
     } elseif ($response->failed()) {
         // Handle failure
     }
-} catch (\UddoktaPay\LaravelSDK\Exceptions\UddoktaPayException $e) {
+} catch (\Bohudur\LaravelSDK\Exceptions\BohudurException $e) {
+    dd("Verification Error: " . $e->getMessage());
+}
+```
+
+---
+
+### Verify a Payment
+
+After the payment is complete, you can verify it using the `VerifyResponse` class to understand the structure and available methods for processing the response:
+
+```php
+use Bohudur\LaravelSDK\Bohudur;
+
+try {
+    $bohudur = Bohudur::make(env('BOHUDUR_API_KEY'));
+  
+    $response = $bohudur->verify('paymentkey');
+
+    if ($response->success()) {
+        // Handle successful status
+        return response()->json([
+            'status' => 'success',
+            'transaction_id' => $response->transactionId(),
+            'amount' => $response->amount(),
+        ]);
+    } elseif ($response->pending()) {
+        // Handle pending status
+    } elseif ($response->failed()) {
+        // Handle failure
+    }
+} catch (\Bohudur\LaravelSDK\Exceptions\BohudurException $e) {
     dd("Verification Error: " . $e->getMessage());
 }
 ```
@@ -106,21 +152,18 @@ try {
 Add the following routes to your `web.php` file:
 
 ```php
-use App\Http\Controllers\UddoktaPayController;
+use App\Http\Controllers\BohudurController;
 
-Route::get('/checkout', [UddoktaPayController::class, 'checkout'])->name('uddoktapay.checkout');
-Route::get('/verify', [UddoktaPayController::class, 'verify'])->name('uddoktapay.verify');
-Route::get('/cancel', [UddoktaPayController::class, 'cancel'])->name('uddoktapay.cancel');
-Route::post('/ipn', [UddoktaPayController::class, 'ipn'])->name('uddoktapay.ipn');
-Route::post('/refund', [UddoktaPayController::class, 'refund'])->name('uddoktapay.refund');
+Route::get('/checkout', [BohudurController::class, 'checkout'])->name('bohudur.checkout');
+Route::get('/verify', [BohudurController::class, 'verify'])->name('bohudur.verify');
+Route::get('/cancel', [BohudurController::class, 'cancel'])->name('bohudur.cancel');
 ```
 
 ---
 
 ## Notes
 
-- Replace placeholders like `your_api_key` with actual credentials.
-- Use appropriate routes for success, cancel, and IPN handling.
+- Replace placeholders like `your_api_key_here` with actual credentials.
 - Always wrap SDK calls with `try-catch` to handle errors effectively.
 
 ---
