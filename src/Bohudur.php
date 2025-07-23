@@ -31,7 +31,7 @@ class Bohudur
         return $this->client->verifyPayment($paymentkey);
     }
 
-    public function execute(string $paymentkey): VerifyResponse
+    public function execute(string $paymentkey): ExecuteResponse
     {
         return $this->client->executePayment($paymentkey);
     }
