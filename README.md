@@ -63,6 +63,7 @@ try {
         ->setAmount(10)
         ->setRedirectUrl(route('bohudur.execute'))
         ->setCancelUrl(route('bohudur.cancel'))
+        ->setReturnType('GET'); //GET or POST
         ->setCurrency("BDT") //optional
         ->setCurrencyValue(1) //optional
         ->setMetadata([ /*optional */
