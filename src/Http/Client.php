@@ -66,7 +66,7 @@ class Client
                 throw new BohudurException('Bohudur Execution Error: '.$response->body());
             }
 
-            return new VerifyResponse($response->json());
+            return new ExecuteResponse($response->json());
         } catch (\Exception $e) {
             throw new BohudurException('Bohudur Execution Error: '.$e->getMessage());
         }
