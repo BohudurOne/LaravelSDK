@@ -63,7 +63,7 @@ try {
         ->setAmount(10)
         ->setRedirectUrl(route('bohudur.execute'))
         ->setCancelUrl(route('bohudur.cancel'))
-        ->setReturnType('GET'); //GET or POST
+        ->setReturnType('GET') //GET or POST
         ->setCurrency("BDT") //optional
         ->setCurrencyValue(1) //optional
         ->setMetadata([ /*optional */
@@ -96,8 +96,9 @@ use Bohudur\LaravelSDK\Bohudur;
 
 try {
     $bohudur = Bohudur::make(env('BOHUDUR_API_KEY'));
-  
-    $response = $bohudur->execute('paymentkey');
+
+    $paymentKey = $request->get('payment_key'); //getting payment key using get method
+    $response = $bohudur->execute($paymentKey);
 
     if ($response->success()) {
         // Handle successful status
