@@ -11,8 +11,9 @@ This is Bohudur Laravel Module that helps to integrate Bohudur in your Laravel p
 - [Installation](#installation)
 - [Usage](#usage)
   - [Initializing the SDK](#initializing-the-sdk)
-  - [Initializing a Payment](#initializing-a-payment-bangladeshi-methods)
-  - [Verifying a Payment](#verifying-a-payment)
+  - [Initializing a Payment](#initializing-a-payment)
+  - [Execute a Payment](#verify-a-payment)
+  - [Verify a Payment](#verify-a-payment)
 - [Routes](#routes)
 - [Notes](#notes)
 
@@ -48,7 +49,7 @@ $bohudur = Bohudur::make(env('BOHUDUR_API_KEY'));
 
 ---
 
-### Initializing a Payment (Bangladeshi Methods)
+### Initializing a Payment
 
 To initiate a payment:
 
