@@ -51,7 +51,7 @@ class Client
     }
     
 
-    public function executePayment(string $paymentkey): VerifyResponse
+    public function executePayment(string $paymentkey): ExecuteResponse
     {
         try {
             if (strlen($paymentkey) != 20) {
