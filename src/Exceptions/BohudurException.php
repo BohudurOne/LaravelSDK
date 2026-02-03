@@ -1,6 +1,5 @@
 <?php
-
-namespace Bohudur\LaravelSDK\Exceptions;
+namespace App\Modules\Bohudur\Exceptions;
 
 use Exception;
 

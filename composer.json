@@ -1,24 +1,25 @@
 {
-    "name": "bohudur/laravel-sdk",
-    "description": "Automate Your Personal Payments with zero cost.",
+    "name": "bohudur/bohudur",
+    "description": "Laravel module for Bohudur Payment Gateway",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Bohudur\\LaravelSDK\\": "src/"
+            "App\\Modules\\Bohudur\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "Bohudur",
-            "email": "support@bohudur.one"
-        }
-    ],
-    "minimum-stability": "stable",
     "require": {
-        "php": ">=7.4"
+        "php": "^8.0",
+        "illuminate/support": "^10.0"
     },
-    "require-dev": {
-        "laravel/pint": "^1.18"
+    "extra": {
+        "laravel": {
+            "providers": [
+                "App\\Modules\\Bohudur\\BohudurServiceProvider"
+            ],
+            "aliases": {
+                "Bohudur": "App\\Modules\\Bohudur\\Facades\\Bohudur"
+            }
+        }
     }
 }
