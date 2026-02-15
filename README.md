@@ -6,4 +6,5 @@ This is Bohudur Laravel Module that helps to integrate Bohudur in your Laravel p
 
 ---
 
-## Table of Contents
+## Documentation
+Go to: [https://docs.bohudur.one/laravel/](https://docs.bohudur.one/laravel/)
