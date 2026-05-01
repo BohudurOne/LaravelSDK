@@ -2,47 +2,27 @@
 namespace App\Modules\Bohudur\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use App\Modules\Bohudur\Services\BohudurService;
 
+/**
+ * @method static void   init(string $apiKey)
+ * @method static \App\Modules\Bohudur\Services\BohudurRequest request()
+ * @method static mixed  query(string $paymentKey)
+ * @method static mixed  execute(string $paymentKey)
+ */
 class Bohudur extends Facade {
-    protected static ?string $apiKey = null;
-
     protected static function getFacadeAccessor() {
-        return \App\Modules\Bohudur\Services\BohudurService::class;
+        return BohudurService::class;
     }
 
+    /**
+     * Override init() so it:
+     *  1. Sets the static runtime key on BohudurService.
+     *  2. Clears the singleton from Laravel's container so the next
+     *     call to request()/query()/execute() picks up the new key.
+     */
     public static function init(string $apiKey): void {
-        static::$apiKey = $apiKey;
-    }
-
-    public static function request() {
-        $service = app(static::getFacadeAccessor());
-
-        $request = $service->request(static::$apiKey);
-
-        static::$apiKey = null;
-
-        return $request;
-    }
-
-    public static function query(string $paymentKey) {
-        $service = app(static::getFacadeAccessor());
-
-        if (static::$apiKey) {
-            $service->setApiKey(static::$apiKey);
-            static::$apiKey = null;
-        }
-
-        return $service->query($paymentKey);
-    }
-
-    public static function execute(string $paymentKey) {
-        $service = app(static::getFacadeAccessor());
-
-        if (static::$apiKey) {
-            $service->setApiKey(static::$apiKey);
-            static::$apiKey = null;
-        }
-
-        return $service->execute($paymentKey);
+        BohudurService::init($apiKey);
+        static::clearResolvedInstance(BohudurService::class);
     }
 }
