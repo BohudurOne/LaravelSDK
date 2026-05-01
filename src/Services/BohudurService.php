@@ -17,8 +17,16 @@ class BohudurService {
         }
     }
 
-    public function request(): BohudurRequest {
-        return new BohudurRequest($this->apiKey, $this->baseUrl);
+    public function request(?string $apiKey = null): BohudurRequest {
+        return new BohudurRequest(
+            $apiKey ?? $this->apiKey,
+            $this->baseUrl
+        );
+    }
+    
+    public function setApiKey(string $apiKey): self {
+        $this->apiKey = $apiKey;
+        return $this;
     }
 
     public function query(string $paymentKey) {
